@@ -1,17 +1,15 @@
 package com.kindred.workflow;
 
 import com.kindred.workflow.model.Action;
+import com.kindred.workflow.model.Context;
 import com.kindred.workflow.model.Transition;
 import com.kindred.workflow.model.WorkflowManaged;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class WorkflowService<W extends WorkflowManaged<S>, S, E, A extends Action> {
 
     private S workflowState;
 
-    private Map<String, Object> context;
+    private Context context;
 
     private WorkflowConfig<S, E, A> workflowConfig;
     private W managedObject;
@@ -22,33 +20,33 @@ public class WorkflowService<W extends WorkflowManaged<S>, S, E, A extends Actio
 
     public void initialise(W managedObject) {
         this.managedObject = managedObject;
-        this.setWorkflowState(managedObject.initialiseWorkflowState());
+        this.setWorkflowState(this.managedObject.initialiseWorkflowState());
     }
 
-    public void initialise(W managedObject, Map<String, Object> context) {
+    public void initialise(W managedObject, Context context) {
         this.managedObject = managedObject;
         this.context = context;
         this.setWorkflowState(managedObject.initialiseWorkflowState());
     }
 
-    public Map<String, Object> signalEvent(E event) {
+    public Context signalEvent(E event) {
         Transition<S, E, A> transition = workflowConfig.getTransitions().get(event);
         validateTransition(transition);
         for (A action: transition.getActions()) {
-            Map<String, Object> executionContext = action.execute(context);
-            if (executionContext != null && executionContext.keySet().size() > 0) {
-                context.putAll(executionContext);
+            Context executionContext = action.execute(context);
+            if (executionContext != null && !executionContext.isEmpty()) {
+                context.merge(executionContext);
             }
         }
         setWorkflowState(transition.getTarget());
         return context;
     }
 
-    public Map<String, Object> signalEvent(E event, Map<String, Object> signalContext) {
+    public Context signalEvent(E event, Context signalContext) {
         if (context == null) {
-            context = new HashMap<>();
+            context = new Context(signalContext);
         }
-        context.putAll(signalContext);
+        context.merge(signalContext);
         this.signalEvent(event);
         return context;
     }

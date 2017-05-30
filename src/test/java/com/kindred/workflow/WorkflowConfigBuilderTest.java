@@ -65,7 +65,6 @@ public class WorkflowConfigBuilderTest {
                 source(FakeStates.NEW).
                 target(FakeStates.PUBLISHED).
                     event(FakeEvents.PUBLISH)
-
                 .action(fakeAction);
 
         //WHEN

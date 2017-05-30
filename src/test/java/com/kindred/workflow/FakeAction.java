@@ -1,12 +1,13 @@
 package com.kindred.workflow;
 
 import com.kindred.workflow.model.Action;
+import com.kindred.workflow.model.Context;
 
 import java.util.Map;
 
 public class FakeAction extends Action {
     @Override
-    public Map<String, Object> execute(Map<String, Object> context) {
+    public Context execute(Context context) {
         return context;
     }
 }

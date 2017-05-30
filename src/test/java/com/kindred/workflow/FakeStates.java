@@ -6,4 +6,5 @@ public enum FakeStates {
     PUBLISHED,
     PRICED,
     MARKETTED
+
 }

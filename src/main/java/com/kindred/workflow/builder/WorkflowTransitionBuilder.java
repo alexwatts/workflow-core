@@ -2,6 +2,7 @@ package com.kindred.workflow.builder;
 
 import com.kindred.workflow.model.Transition;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class WorkflowTransitionBuilder<S, E, A> {

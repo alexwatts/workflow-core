@@ -2,6 +2,7 @@ package com.kindred.workflow;
 
 import com.kindred.workflow.builder.WorkflowConfigBuilder;
 import com.kindred.workflow.model.Action;
+import com.kindred.workflow.model.Context;
 import com.kindred.workflow.model.WorkflowManaged;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,15 +35,6 @@ public class WorkflowServiceTest {
         @Override
         public FakeStates initialiseWorkflowState() {
             return FakeStates.NEW;
-        }
-
-    }
-
-    class FakeWorkflowManagedInInvalidState implements WorkflowManaged<FakeStates> {
-
-        @Override
-        public FakeStates initialiseWorkflowState() {
-            return FakeStates.PUBLISHED;
         }
 
     }
@@ -89,11 +81,11 @@ public class WorkflowServiceTest {
         //GIVEN
         Map<String, Object> context = new HashMap<>();
         context.put("price", 100L);
-        stateMachine.initialise(new FakeWorkflowManaged(), context);
+        stateMachine.initialise(new FakeWorkflowManaged(), new Context(context));
         stateMachine.signalEvent(FakeEvents.PUBLISH);
 
         //WHEN
-        Map<String, Object> workflowContext = stateMachine.signalEvent(FakeEvents.PRICE);
+        Context workflowContext = stateMachine.signalEvent(FakeEvents.PRICE);
 
         //THEN
         assertThat((Long)workflowContext.get("price"), is(101L));
@@ -105,30 +97,27 @@ public class WorkflowServiceTest {
         stateMachine.initialise(new FakeWorkflowManaged());
         stateMachine.signalEvent(FakeEvents.PUBLISH);
 
-
         Map<String, Object> context = new HashMap<>();
         context.put("price", 100L);
         //WHEN
-        Map<String, Object> workflowContext = stateMachine.signalEvent(FakeEvents.PRICE, context);
+        Context workflowContext = stateMachine.signalEvent(FakeEvents.PRICE, new Context(context));
 
         //THEN
-        assertThat((Long)workflowContext.get("price"), equalTo(101L));
+        assertThat((Long) workflowContext.get("price"), equalTo(101L));
     }
 
     @Test
     public void shouldFireMultipleActionsInCorrectOrder() {
         //GIVEN
-
         Map<String, Object> context = new HashMap<>();
         context.put("price", 100L);
-        stateMachine.initialise(new FakeWorkflowManaged(), context);
+        stateMachine.initialise(new FakeWorkflowManaged(), new Context(context));
         stateMachine.signalEvent(FakeEvents.PUBLISH);
         stateMachine.signalEvent(FakeEvents.PRICE);
-        Map<String, Object> workflowContext = stateMachine.signalEvent(FakeEvents.MARKET);
+        Context workflowContext = stateMachine.signalEvent(FakeEvents.MARKET);
 
         //THEN
         assertThat((Boolean)workflowContext.get("marketted"), is(true));
-
     }
 
 }
