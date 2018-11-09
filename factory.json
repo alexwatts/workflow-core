@@ -1,0 +1,61 @@
+{
+  "v": "4.0",
+  "name": "f1wmt4w91z",
+  "workspace": {
+    "defaultEnv": "wss",
+    "environments": {
+      "wss": {
+        "machines": {
+          "dev-machine": {
+            "attributes": {
+              "memoryLimitBytes": "2147483648"
+            },
+            "servers": {},
+            "volumes": {},
+            "installers": [
+            "org.eclipse.che.ws-agent",
+            "org.eclipse.che.exec",
+            "org.eclipse.che.terminal",
+            "org.eclipse.che.git-credentials",
+            "org.eclipse.che.ls.java"
+            ],
+            "env": {}
+          }
+        },
+        "recipe": {
+          "type": "dockerimage",
+          "content": "eclipse/ubuntu_jdk8"
+        }
+      }
+    },
+    "projects": [
+      {
+        "links": [],
+        "name": "workflow-core",
+        "attributes": {},
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/alexwatts/workflow-core",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/workflow-core",
+        "problems": [],
+        "mixins": [
+          "git"
+        ]
+      }
+    ],
+    "name": "wss_1",
+    "attributes": {},
+    "commands": [],
+    "links": []
+  },
+  "id": "factory2id925qgzc70ctx9",
+  "creator": {
+    "name": "che",
+    "email": "che@eclipse.org",
+    "created": 1541768394056,
+    "userId": "che"
+  }
+}
