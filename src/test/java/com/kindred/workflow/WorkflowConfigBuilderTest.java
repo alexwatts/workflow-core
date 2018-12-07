@@ -35,7 +35,7 @@ public class WorkflowConfigBuilderTest {
         Set<FakeStates> states = builder.build().getStates();
 
         //THEN
-        assertThat(states.size(), equalTo(1));
+        assertThat(states.size(), equalTo(134));
         assertThat(states, contains(FakeStates.NEW));
     }
 
